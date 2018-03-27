@@ -44,6 +44,9 @@ public class Launcher extends GameEngine {
 
     private Animations animatedBackground = new Animations(this, "src/main/java/nl/han/ica/brorio/resources/textures/background/backgroundSprite.png", 12);
 
+    //Tiles
+    Sprite lavaSprite;
+    private Animations animatedLavaTiles = new Animations(this,"src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/lava.png",3);
     public static void main(String args[]) {
         Launcher launcher = new Launcher();
         launcher.runSketch();
@@ -58,31 +61,16 @@ public class Launcher extends GameEngine {
 
         setView(view);
         size(width, height);
-
+        initializeMap();
 
         createDashboard(width, 100);
 
 
-        initializeMap();
+
         initializeSound();
         createObjects();
 
 
-    }
-
-    private int counter() {
-
-
-        if (counter > 11) {
-            counter = 0;
-        }
-        if (timer.hasFinished()) {
-            System.out.println(counter);
-            timer.resetTimer();
-            return counter++;
-
-        }
-        return counter;
     }
 
     @Override
@@ -92,25 +80,19 @@ public class Launcher extends GameEngine {
         } else {
             createViewWithoutViewport(backgroundWidth, backgroundHeight);
         }
-
+        updateMapTiles();
         deleteObjects();
         refreshDasboardText();
-
-
-
-
     }
 
     private void initializeSound() {
         backgroundSound = new Sound(this, "src/main/java/nl/han/ica/brorio/resources/sounds/geluid.mp3");
         backgroundSound.loop(-1);
-
     }
 
     private void createViewWithoutViewport(int screenWidth, int screenHeight) {
         View view = new View(screenWidth, screenHeight);
-        view.setBackground(animatedBackground.loopAnimations().get(counter()), screenWidth, screenHeight);
-
+        view.setBackground(animatedBackground.animation(),screenWidth,screenHeight);
         setView(view);
         size(screenWidth, screenHeight);
     }
@@ -121,7 +103,7 @@ public class Launcher extends GameEngine {
         View view = new View(viewPort, worldWidth, worldHeight);
         setView(view);
         size(screenWidth, screenHeight);
-        view.setBackground(animatedBackground.loopAnimations().get(counter()), screenWidth, screenHeight);
+        view.setBackground(animatedBackground.animation(), screenWidth, screenHeight);
 
     }
 
@@ -171,29 +153,34 @@ public class Launcher extends GameEngine {
 
         }
     }
+    private void updateMapTiles(){
+        lavaSprite.setSprite(animatedLavaTiles.animation());
+    }
 
     private void initializeMap() {
         Sprite sprite_sheet = new Sprite("src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/Image20000.png");
-
+        Animations lava = new Animations(this,"src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/lava.png",3);
+        lavaSprite = new Sprite(animatedLavaTiles.animation());
         Tile tile = new Tile(sprite_sheet);
         tile.setSpriteSize(64);
-        TileType<BoardsTile> boardTileType = new TileType<>(BoardsTile.class, sprite_sheet);
+        TileType<BoardsTile> lavaTileType = new TileType<>(BoardsTile.class, lavaSprite);
+        TileType<BoardsTile> boardsTileTileType = new TileType<>(BoardsTile.class, sprite_sheet);
 
-        TileType[] tileTypes = {boardTileType};
+        TileType[] tileTypes = {lavaTileType,boardsTileTileType};
         int tileSize = 64;
         int tilesMap[][] = {
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
         tileMap = new TileMap(tileSize, tileTypes, tilesMap);
     }
