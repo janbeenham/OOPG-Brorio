@@ -13,6 +13,8 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.EdgeFollowingViewport;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.brorio.entities.*;
+
+import nl.han.ica.brorio.world.World;
 import processing.core.PImage;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class Launcher extends GameEngine {
     private Animations animatedBackground = new Animations(this, "src/main/java/nl/han/ica/brorio/resources/textures/background/backgroundSprite.png", 12);
 
     //Tiles
+    World world = new World(this);
     Sprite lavaSprite;
     private Animations animatedLavaTiles = new Animations(this,"src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/lava.png",3);
     public static void main(String args[]) {
@@ -55,13 +58,16 @@ public class Launcher extends GameEngine {
 
     @Override
     public void setupGame() {
-
+        world.initializeMap();
+        tileMap = world.getTileMap();
         view = new View(backgroundWidth, backgroundHeight);
 
 
         setView(view);
         size(width, height);
-        initializeMap();
+
+
+
 
         createDashboard(width, 100);
 
@@ -80,7 +86,7 @@ public class Launcher extends GameEngine {
         } else {
             createViewWithoutViewport(backgroundWidth, backgroundHeight);
         }
-        updateMapTiles();
+        world.updateMapTiles();
         deleteObjects();
         refreshDasboardText();
     }
@@ -153,37 +159,39 @@ public class Launcher extends GameEngine {
 
         }
     }
-    private void updateMapTiles(){
-        lavaSprite.setSprite(animatedLavaTiles.animation());
-    }
-
-    private void initializeMap() {
-        Sprite sprite_sheet = new Sprite("src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/Image20000.png");
-        Animations lava = new Animations(this,"src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/lava.png",3);
-        lavaSprite = new Sprite(animatedLavaTiles.animation());
-        Tile tile = new Tile(sprite_sheet);
-        tile.setSpriteSize(64);
-        TileType<BoardsTile> lavaTileType = new TileType<>(BoardsTile.class, lavaSprite);
-        TileType<BoardsTile> boardsTileTileType = new TileType<>(BoardsTile.class, sprite_sheet);
-
-        TileType[] tileTypes = {lavaTileType,boardsTileTileType};
-        int tileSize = 64;
-        int tilesMap[][] = {
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-        };
-        tileMap = new TileMap(tileSize, tileTypes, tilesMap);
-    }
+//    private void updateMapTiles(){
+//        lavaSprite.setSprite(animatedLavaTiles.animation());
+//    }
+//
+//    private void initializeMap() {
+//        Sprite sprite_sheet = new Sprite("src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/Image20000.png");
+//        Animations lava = new Animations(this,"src/main/java/nl/han/ica/brorio/resources/textures/broriotiles/lava.png",3);
+//
+//        lavaSprite = new Sprite(animatedLavaTiles.animation());
+//
+//        Tile tile = new Tile(sprite_sheet);
+//        tile.setSpriteSize(64);
+//        TileType<BoardsTile> lavaTileType = new TileType<>(BoardsTile.class, lavaSprite);
+//        TileType<BoardsTile> boardsTileTileType = new TileType<>(BoardsTile.class, sprite_sheet);
+//
+//        TileType[] tileTypes = {lavaTileType,boardsTileTileType};
+//        int tileSize = 64;
+//        int tilesMap[][] = {
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {-1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+//                {1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+//                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+//        };
+//        tileMap = new TileMap(tileSize, tileTypes, tilesMap);
+//    }
 
 
 }

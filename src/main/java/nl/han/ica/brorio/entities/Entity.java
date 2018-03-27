@@ -7,7 +7,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Exceptions.TileNotFoundException;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
-import nl.han.ica.brorio.BoardsTile;
+import nl.han.ica.brorio.world.BoardsTile;
 import nl.han.ica.brorio.Launcher;
 import processing.core.PVector;
 
