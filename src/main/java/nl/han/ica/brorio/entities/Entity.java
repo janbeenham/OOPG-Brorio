@@ -9,34 +9,44 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.brorio.world.BoardsTile;
 import nl.han.ica.brorio.Launcher;
+import nl.han.ica.brorio.world.DamagingTile;
+import nl.han.ica.brorio.world.SolidTile;
 import processing.core.PVector;
 
 import java.util.List;
 
-public abstract class Entity extends AnimatedSpriteObject implements ICollidableWithTiles, ICollidableWithGameObjects {
+public abstract class Entity extends AnimatedSpriteObject implements ICollidableWithTiles,ICollidableWithGameObjects{
     private int x, y, width, height;
     private Launcher launcher;
-    private boolean interaction = false;
+    private boolean objectInteraction = false;
+    private boolean tileInteraction = false;
 
     public Entity(Launcher launcher, Sprite sprite, int totalFrames) {
         super(sprite, totalFrames);
         this.launcher = launcher;
     }
 
+
+
     @Override
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
         PVector vector;
         for (GameObject go : collidedGameObjects) {
             if (go.getX() == (go.getX()) && go.getY() == go.getY()) {
-                interaction = true;
-                die();
-
+                //Wanneer gameobject een Speler is slaat hij dit stuk over
+                if(go instanceof Player) {
+                    objectInteraction = true;
+                    die();
+                }
             }
         }
     }
 
-    public boolean getInteraction() {
-        return interaction;
+    public boolean getObjectInteraction() {
+        return objectInteraction;
+    }
+    public boolean getTileInteracton(){
+        return tileInteraction;
     }
 
     @Override
@@ -44,7 +54,7 @@ public abstract class Entity extends AnimatedSpriteObject implements ICollidable
         PVector vector;
 
         for (CollidedTile ct : collidedTiles) {
-            if (ct.theTile instanceof BoardsTile) {
+            if (ct.theTile instanceof SolidTile) {
 
                 if (ct.collisionSide >= ct.TOP) {
                     try {
@@ -55,6 +65,7 @@ public abstract class Entity extends AnimatedSpriteObject implements ICollidable
                     }
                 }
             }
+
         }
     }
 
