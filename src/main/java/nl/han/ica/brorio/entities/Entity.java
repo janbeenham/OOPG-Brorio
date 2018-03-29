@@ -7,15 +7,17 @@ import nl.han.ica.OOPDProcessingEngineHAN.Exceptions.TileNotFoundException;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
-import nl.han.ica.brorio.world.BoardsTile;
+import nl.han.ica.brorio.entities.creatures.Creature;
+import nl.han.ica.brorio.entities.creatures.Enemy;
+import nl.han.ica.brorio.entities.creatures.Player;
 import nl.han.ica.brorio.Launcher;
-import nl.han.ica.brorio.world.DamagingTile;
+import nl.han.ica.brorio.entities.items.Item;
 import nl.han.ica.brorio.world.SolidTile;
 import processing.core.PVector;
 
 import java.util.List;
 
-public abstract class Entity extends AnimatedSpriteObject implements ICollidableWithTiles,ICollidableWithGameObjects{
+public abstract class Entity extends AnimatedSpriteObject implements ICollidableWithTiles {
     private int x, y, width, height;
     private Launcher launcher;
     private boolean objectInteraction = false;
@@ -24,28 +26,18 @@ public abstract class Entity extends AnimatedSpriteObject implements ICollidable
     public Entity(Launcher launcher, Sprite sprite, int totalFrames) {
         super(sprite, totalFrames);
         this.launcher = launcher;
+
     }
 
 
 
-    @Override
-    public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
-        PVector vector;
-        for (GameObject go : collidedGameObjects) {
-            if (go.getX() == (go.getX()) && go.getY() == go.getY()) {
-                //Wanneer gameobject een Speler is slaat hij dit stuk over
-                if(go instanceof Player) {
-                    objectInteraction = true;
-                    die();
-                }
-            }
-        }
-    }
+
 
     public boolean getObjectInteraction() {
         return objectInteraction;
     }
-    public boolean getTileInteracton(){
+
+    public boolean getTileInteracton() {
         return tileInteraction;
     }
 
